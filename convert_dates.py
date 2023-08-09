@@ -3,6 +3,7 @@
 
 import calendar
 from datetime import datetime
+from datetime import timedelta
 import pandas as pd
 import argparse
 import sys
@@ -64,12 +65,15 @@ df = df.set_index('ValidFromDate').asfreq('D', method='bfill').reset_index()
 today = datetime.today()
 
 # Check the last row to see if the date is the last day of the month.
-if end_date < today and df['ValidFromDate'].iloc[-1].day != last_day_of_month:
-    print('Last day of the month is missing. Inserting...')
-    # Add the last date to the dataframe and forward fill the rates
-    last_date = pd.DataFrame({'ValidFromDate': [end_date]})
+last_row_date = df['ValidFromDate'].iloc[-1]
+if end_date < today and last_row_date.day < last_day_of_month:
+    print('Last day of the month is missing. Inserting missing dates...')
+    # Add the missing dates to the dataframe and forward fill the rates
+    missing_dates = pd.date_range(start=last_row_date + timedelta(days=1), end=end_date, freq='D')
+    print(f'Inserted dates: {missing_dates.strftime("%Y-%m-%d %H:%M:%S").to_list()}')
+    missing_rows = pd.DataFrame({'ValidFromDate': missing_dates })
     print('Forward filling rates...')
-    df = pd.concat([df, last_date], ignore_index = True).ffill()
+    df = pd.concat([df, missing_rows], ignore_index = True).ffill()
 
 # Trim the dataframe to the dates we need
 df = df[(df['ValidFromDate'] >= start_date) & (df['ValidFromDate'] <= end_date)]
