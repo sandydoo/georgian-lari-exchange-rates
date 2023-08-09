@@ -83,6 +83,10 @@ date_format = '%d/%m/%Y'
 df['Date'] = df['Date'].dt.strftime(date_format)
 df['ValidFromDate'] = df['ValidFromDate'].dt.strftime(date_format)
 
+# Verify that no dates are missing
+num_rows = len(df.index)
+assert num_rows == last_day_of_month, f'Expected {last_day_of_month} rows, got {num_rows}'
+
 print('Saving processed CSV...')
 df.to_csv(f'{args.currency}-{year}-{month}.csv')
 print('Done!')
