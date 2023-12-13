@@ -45,14 +45,13 @@ to_iso = lambda d: d.isoformat() #.replace('+00:00', 'Z')
 
 CSV_URL = f'https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/export/csv?currencies={args.currency}&end={to_iso(end_date)}&start={to_iso(offset_start_date)}'
 headers = { 'Accept-Language': 'en' }
-parse_us_date = lambda x: datetime.strptime(x, '%m/%d/%Y')
 
 print(f'Fetching CSV for {args.currency} from {start_date} to {end_date}...')
 df = pd.read_csv(
         CSV_URL,
         storage_options=headers,
         parse_dates=['Date', 'ValidFromDate'],
-        date_parser=parse_us_date
+        date_format='%m/%d/%Y'
      )
 
 df.drop_duplicates(inplace=True)
