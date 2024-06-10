@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i python3 -p python310Full -p python310Packages.pandas
+#! nix-shell -i python3 -p python312Full -p python312Packages.pandas
 
 import calendar
 from datetime import datetime
