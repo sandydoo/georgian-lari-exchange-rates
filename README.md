@@ -24,7 +24,7 @@ options:
 ### Example
 
 ```sh
-./convert_dates.py -p 2023-09 -c EUR
+./convert_dates.py -p 2023-09 -c {EUR,GBP,USD}
 ```
 
 ### Supported currencies
